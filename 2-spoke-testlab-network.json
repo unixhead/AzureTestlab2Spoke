@@ -13,7 +13,7 @@
       {
         "type": "Microsoft.Network/virtualNetworks",
         "apiVersion": "2020-06-01",
-        "name": "HubVNet1",
+        "name": "HubVNET1",
         "location": "[parameters('location')]",
         "properties": {
           "addressSpace": {
@@ -40,7 +40,46 @@
                 "addressPrefix": "10.0.2.0/24"
               }
             }
+          ],
+          "virtualNetworkPeerings": [
+              {
+                  "name": "s1",
+                  "properties": {
+                      "peeringState": "Connected",
+                      "remoteVirtualNetwork": {
+                          "id": "[resourceId('Microsoft.Network/virtualNetworks', 'Spoke1VNET')]"
+                      },
+                      "allowVirtualNetworkAccess": true,
+                      "allowForwardedTraffic": true,
+                      "allowGatewayTransit": false,
+                      "useRemoteGateways": false,
+                      "remoteAddressSpace": {
+                          "addressPrefixes": [
+                              "10.0.10.0/24"
+                          ]
+                      }
+                  }
+              },
+              {
+                  "name": "s2",
+                  "properties": {
+                      "peeringState": "Connected",
+                      "remoteVirtualNetwork": {
+                          "id": "[resourceId('Microsoft.Network/virtualNetworks', 'Spoke2VNET')]"
+                      },
+                      "allowVirtualNetworkAccess": true,
+                      "allowForwardedTraffic": true,
+                      "allowGatewayTransit": false,
+                      "useRemoteGateways": false,
+                      "remoteAddressSpace": {
+                          "addressPrefixes": [
+                              "10.0.20.0/24"
+                          ]
+                      }
+                  }
+              }
           ]
+
         }
       },
       {
@@ -61,7 +100,27 @@
                 "addressPrefix": "10.0.10.0/24"
               }
             }
-          ]
+          ],
+          "virtualNetworkPeerings": [
+            {
+                "name": "s1p",
+                "properties": {
+                    "peeringState": "Connected",
+                    "remoteVirtualNetwork": {
+                        "id": "[resourceId('Microsoft.Network/virtualNetworks/','HubVNET1')]"
+                    },
+                    "allowVirtualNetworkAccess": true,
+                    "allowForwardedTraffic": true,
+                    "allowGatewayTransit": false,
+                    "useRemoteGateways": false,
+                    "remoteAddressSpace": {
+                        "addressPrefixes": [
+                            "10.0.0.0/22"
+                        ]
+                    }
+                }
+            }
+        ]
         }
       },
       {
@@ -82,47 +141,125 @@
                 "addressPrefix": "10.0.20.0/24"
               }
             }
-          ]
+          ],
+          "virtualNetworkPeerings": [
+            {
+                "name": "s2p",
+                "properties": {
+                    "peeringState": "Connected",
+                    "remoteVirtualNetwork": {
+                        "id": "[resourceId('Microsoft.Network/virtualNetworks/','HubVNET1')]"
+                    },
+                    "allowVirtualNetworkAccess": true,
+                    "allowForwardedTraffic": true,
+                    "allowGatewayTransit": false,
+                    "useRemoteGateways": false,
+                    "remoteAddressSpace": {
+                        "addressPrefixes": [
+                            "10.0.0.0/22"
+                        ]
+                    }
+                }
+            }
+        ]
         }
       },
       {
-        "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
-        "apiVersion": "2020-05-01",
-        "name": "HubVNet1/HubVNet1-Spoke1VNET",
-        "properties": {
-          "allowVirtualNetworkAccess": true,
-          "allowForwardedTraffic": false,
-          "allowGatewayTransit": false,
-          "useRemoteGateways": false,
-          "remoteVirtualNetwork": {
-            "id": "[resourceId('Microsoft.Network/virtualNetworks/', 'Spoke1VNET')]"
+          "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+          "apiVersion": "2020-11-01",
+          "name": "HubVNet1/s1",
+          "dependsOn": [
+              "[resourceId('Microsoft.Network/virtualNetworks', 'HubVNET1')]",
+              "[resourceId('Microsoft.Network/virtualNetworks', 'Spoke1VNET')]"
+          ],
+          "properties": {
+              "peeringState": "Connected",
+              "remoteVirtualNetwork": {
+                  "id": "[resourceId('Microsoft.Network/virtualNetworks', 'Spoke1VNET')]"
+              },
+              "allowVirtualNetworkAccess": true,
+              "allowForwardedTraffic": true,
+              "allowGatewayTransit": false,
+              "useRemoteGateways": false,
+              "remoteAddressSpace": {
+                  "addressPrefixes": [
+                      "10.0.10.0/24"
+                  ]
+              }
           }
-        },
-        "dependsOn": [
-          "Spoke1VNET",
-          "HubVNet1"
-        ]
       },
       {
-        "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
-        "apiVersion": "2020-05-01",
-        "name": "HubVNet1/HubVNet1-Spoke2VNET",
-        "properties": {
-          "allowVirtualNetworkAccess": true,
-          "allowForwardedTraffic": false,
-          "allowGatewayTransit": false,
-          "useRemoteGateways": false,
-          "remoteVirtualNetwork": {
-            "id": "[resourceId('Microsoft.Network/virtualNetworks/', 'Spoke2VNET')]"
+          "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+          "apiVersion": "2020-11-01",
+          "name": "Spoke1VNET/s1p",
+          "dependsOn": [
+              "[resourceId('Microsoft.Network/virtualNetworks', 'Spoke1VNET')]",
+              "[resourceId('Microsoft.Network/virtualNetworks', 'HubVNET1')]"
+          ],
+          "properties": {
+              "peeringState": "Connected",
+              "remoteVirtualNetwork": {
+                  "id": "[resourceId('Microsoft.Network/virtualNetworks', 'HubVNET1')]"
+              },
+              "allowVirtualNetworkAccess": true,
+              "allowForwardedTraffic": true,
+              "allowGatewayTransit": false,
+              "useRemoteGateways": false,
+              "remoteAddressSpace": {
+                  "addressPrefixes": [
+                      "10.0.0.0/22"
+                  ]
+              }
           }
-        },
-        "dependsOn": [
-          "Spoke2VNET",
-          "HubVNet1"
-        ]
+      },
+      {
+          "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+          "apiVersion": "2020-11-01",
+          "name": "HubVNET1/s2",
+          "dependsOn": [
+              "[resourceId('Microsoft.Network/virtualNetworks', 'HubVNET1')]",
+              "[resourceId('Microsoft.Network/virtualNetworks', 'Spoke2VNET')]"
+          ],
+          "properties": {
+              "peeringState": "Connected",
+              "remoteVirtualNetwork": {
+                  "id": "[resourceId('Microsoft.Network/virtualNetworks', 'Spoke2VNET')]"
+              },
+              "allowVirtualNetworkAccess": true,
+              "allowForwardedTraffic": true,
+              "allowGatewayTransit": false,
+              "useRemoteGateways": false,
+              "remoteAddressSpace": {
+                  "addressPrefixes": [
+                      "10.0.20.0/24"
+                  ]
+              }
+          }
+      },
+      {
+          "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+          "apiVersion": "2020-11-01",
+          "name": "Spoke2VNET/s2p",
+          "dependsOn": [
+              "[resourceId('Microsoft.Network/virtualNetworks', 'Spoke2VNET')]",
+              "[resourceId('Microsoft.Network/virtualNetworks', 'HubVNET1')]"
+          ],
+          "properties": {
+              "peeringState": "Connected",
+              "remoteVirtualNetwork": {
+                  "id": "[resourceId('Microsoft.Network/virtualNetworks', 'HubVNET1')]"
+              },
+              "allowVirtualNetworkAccess": true,
+              "allowForwardedTraffic": true,
+              "allowGatewayTransit": false,
+              "useRemoteGateways": false,
+              "remoteAddressSpace": {
+                  "addressPrefixes": [
+                      "10.0.0.0/22"
+                  ]
+              }
+          }
       }
-      
-      
     ]
   }
 
