@@ -123,7 +123,7 @@
               "name": "ipconfig1",
               "properties": {
                 "privateIPAddress": "10.0.2.10",
-                "privateIPAllocationMethod": "Dynamic",
+                "privateIPAllocationMethod": "static",
                 "publicIPAddress": {
                   "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'FW1_Public_IP')]"
                 },
@@ -156,7 +156,7 @@
               "name": "ipconfig1",
               "properties": {
                 "privateIPAddress": "10.0.2.11",
-                "privateIPAllocationMethod": "Dynamic",
+                "privateIPAllocationMethod": "static",
                 "publicIPAddress": {
                   "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'FW2_Public_IP')]"
                 },
@@ -188,7 +188,7 @@
               "name": "ipconfig1",
               "properties": {
                 "privateIPAddress": "10.0.1.10",
-                "privateIPAllocationMethod": "Dynamic",
+                "privateIPAllocationMethod": "static",
                 "subnet": {
                   "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'HubVNET1', 'FW_Inside')]"
                 },
@@ -217,7 +217,7 @@
               "name": "ipconfig1",
               "properties": {
                 "privateIPAddress": "10.0.1.11",
-                "privateIPAllocationMethod": "Dynamic",
+                "privateIPAllocationMethod": "static",
                 "subnet": {
                   "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'HubVNET1', 'FW_Inside')]"
                 },
@@ -299,6 +299,27 @@
               }
             ]
           }
+        }
+      },
+      ,
+    {
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "FW1customscript')]",
+      "apiVersion": "2020-12-01",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Compute/virtualMachines/', 'FW1')]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.Azure.Extensions",
+        "type": "CustomScript",
+        "typeHandlerVersion": "2.0",
+        "autoUpgradeMinorVersion": true,
+        "settings": {
+          "fileUris": [
+            "[uri(parameters('_artifactsLocation'), concat('scripts/hello.sh', parameters('_artifactsLocationSasToken')))]"
+          ],
+          "commandToExecute": "[parameters('commandToExecute')]"
         }
       },
       {
