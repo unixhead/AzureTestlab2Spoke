@@ -298,30 +298,7 @@
                 
               }
             ]
-          },
-          "resources": [
-            {
-              "type": "Microsoft.Compute/virtualMachines/extensions",
-              "name": "FW1customscript",
-              "apiVersion": "2020-12-01",
-              "location": "[parameters('location')]",
-              "dependsOn": [
-                "[resourceId('Microsoft.Compute/virtualMachines/', 'FW1')]"
-              ],
-              "properties": {
-                "publisher": "Microsoft.Azure.Extensions",
-                "type": "CustomScript",
-                "typeHandlerVersion": "2.0",
-                "autoUpgradeMinorVersion": true,
-                "settings": {
-                  "fileUris": [
-                    "https://raw.githubusercontent.com/unixhead/AzureTestlab2Spoke/main/fwscript.sh"
-                  ],
-                  "commandToExecute": "sh fwscript.sh"
-                }
-              }
-            }
-          ]
+          }
         }
       },
       
@@ -390,32 +367,10 @@
                
               }
             ]
-          },
-          "resources" :[
-            {
-              "type": "Microsoft.Compute/virtualMachines/extensions",
-              "name": "FW2customscript",
-              "apiVersion": "2020-12-01",
-              "location": "[parameters('location')]",
-              "dependsOn": [
-                "[resourceId('Microsoft.Compute/virtualMachines/', 'FW2')]"
-              ],
-              "properties": {
-                "publisher": "Microsoft.Azure.Extensions",
-                "type": "CustomScript",
-                "typeHandlerVersion": "2.0",
-                "autoUpgradeMinorVersion": true,
-                "settings": {
-                  "fileUris": [
-                    "https://raw.githubusercontent.com/unixhead/AzureTestlab2Spoke/main/fwscript.sh"
-                  ],
-                  "commandToExecute": "sh fwscript.sh"
-                }
-              }
-            }
-          ]
+          }
         }
       },
+
       
       {
         "type": "Microsoft.Network/networkInterfaces",
