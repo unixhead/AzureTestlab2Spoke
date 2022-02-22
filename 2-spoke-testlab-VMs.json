@@ -39,6 +39,40 @@
                 "sourceAddressPrefixes": [],
                 "destinationAddressPrefixes": []
               }
+            },
+            {
+              "name": "allowallout",
+              "properties": {
+                  "protocol": "*",
+                  "sourcePortRange": "*",
+                  "destinationPortRange": "1-65535",
+                  "sourceAddressPrefix": "10.0.0.0/16",
+                  "destinationAddressPrefix": "*",
+                  "access": "Allow",
+                  "priority": 301,
+                  "direction": "Outbound",
+                  "sourcePortRanges": [],
+                  "destinationPortRanges": [],
+                  "sourceAddressPrefixes": [],
+                  "destinationAddressPrefixes": []
+              }
+          },
+          {
+              "name": "all",
+              "properties": {
+                  "protocol": "*",
+                  "sourcePortRange": "*",
+                  "destinationPortRange": "1-65535",
+                  "sourceAddressPrefix": "10.0.0.0/16",
+                  "destinationAddressPrefix": "*",
+                  "access": "Allow",
+                  "priority": 302,
+                  "direction": "Inbound",
+                  "sourcePortRanges": [],
+                  "destinationPortRanges": [],
+                  "sourceAddressPrefixes": [],
+                  "destinationAddressPrefixes": []
+              }
             }
           ]
         }
@@ -402,7 +436,7 @@
             "dnsServers": []
           },
           "enableAcceleratedNetworking": false,
-          "enableIPForwarding": true,
+          "enableIPForwarding": false,
           "networkSecurityGroup": {
             "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'vmNSG')]"
           }
@@ -438,7 +472,7 @@
             "dnsServers": []
           },
           "enableAcceleratedNetworking": false,
-          "enableIPForwarding": true,
+          "enableIPForwarding": false,
           "networkSecurityGroup": {
             "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'vmNSG')]"
           }
@@ -474,7 +508,7 @@
             "dnsServers": []
           },
           "enableAcceleratedNetworking": false,
-          "enableIPForwarding": true,
+          "enableIPForwarding": false,
           "networkSecurityGroup": {
             "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'vmNSG')]"
           }
